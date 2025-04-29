@@ -58,7 +58,7 @@ class gamer_gen(rv_continuous):
 # pylint: enable=too-many-arguments, too-many-positional-arguments
 
 gamer = gamer_gen(a=0.0, name='gamer')
-r'''A gamer distribution as in Section 9 of the Paper.
+r'''A gamer distribution as in Section 6.5 of the Paper.
 
 As an instance of the `scipy.stats.rv_continuous` class, `gamer` object
 inherits from it a collection of generic methods (see below for the full
@@ -230,8 +230,7 @@ class IDPModel:
     r'''An IDP model on the state space $S = \\{0, ..., L - 1\\}$.
 
     The IDP model consists of both an IDP and some observed data. See
-    Section 9 of the Paper for details. The bijection $\sigma$ that
-    appears in the Paper is taken here to be the identity.
+    Section 6.1 of the Paper for details.
 
     '''
 
@@ -271,14 +270,14 @@ class IDPModel:
     @property
     def colConc(self):
         r'''`float`: The column concentration parameter. Should be
-        positive. Denoted by $\kappa$ in Section 9 of the Paper.
+        positive. Denoted by $\kappa$ in Section 6.1 of the Paper.
         '''
         return self._idp['colConc']
 
     @property
     def rowConc(self):
         r'''`float`: The row concentration parameter. Should be
-        positive. Denoted by $\varepsilon$ in Section 9 of the Paper.
+        positive. Denoted by $\varepsilon$ in Section 6.1 of the Paper.
         '''
         return self._idp['rowConc']
 
@@ -286,8 +285,8 @@ class IDPModel:
     def baseMeas(self):
         r'''`tuple`(`float`): The base probability vector. Should be a
         sequence of positive numbers that sum to 1. Denoted by
-        $\boldsymbol{p} = (p_0, \ldots, p_{L - 1})$ in Section 9 of the
-        Paper, where $p_\ell = \varrho(\\{\ell\\})$.
+        $\boldsymbol{p} = (p_0, \ldots, p_{L - 1})$ in Section 6.1 of
+        the Paper, where $p_\ell = \varrho(\\{\ell\\})$.
         '''
         return tuple(self._idp['baseMeas'])
 
@@ -296,7 +295,7 @@ class IDPModel:
         r'''`tuple`(`tuple`(`int`)): The row counts for the observed
         data. If `row` is $m - 1$ and `state` is $\ell$, then
         `rowCounts`[`row`][`state`] is denoted by $\overline{y}_{m\ell}$
-        in Section 9 of the Paper. It is the number of observed
+        in Section 6.1 of the Paper. It is the number of observed
         instances of `state` in the given row of data.
         '''
         return tuple(tuple(row) for row in self._rowCounts)
@@ -305,7 +304,7 @@ class IDPModel:
     def likelihoods(self):
         r'''`tuple`(`float`): The prior likelihoods. If `row` equals
         $m - 1$, then `likelihoods`[`row`] is denoted by
-        $\varrho_N(A_m)$ in Section 9 of the Paper. It is the prior
+        $\varrho_N(A_m)$ in Section 6.1 of the Paper. It is the prior
         probability of seeing the row counts for the given row.
         '''
         return tuple(self._likelihoods)
@@ -313,7 +312,7 @@ class IDPModel:
     @property
     def logScale(self):
         r'''`float`: The log scale factor to use for weighted
-        simulations. Denoted by $\log c$ in Section 9 of the Paper.
+        simulations. Denoted by $\log c$ in Section 6.1 of the Paper.
         Defaults to 0. Altering this value runs the `clearSims` method.
         '''
         return self._logScale
@@ -327,16 +326,16 @@ class IDPModel:
     def weightedSims(self):
         r'''`tuple`(`WeightedSim`): A tuple of distinct (and therefore
         independent) `WeightedSim` instances. `weightedSims`[k] is
-        denoted by $(t^k, \boldsymbol{\theta}_M^{*, k})$ in Section 9 of
-        the Paper, and has total weight $V_k$. This property is empty if
-        the `addSims` method has never been run.
+        denoted by $(t^k, \boldsymbol{\theta}_M^{*, k})$ in Section 6.1
+        of the Paper, and has total weight $V_k$. This property is empty
+        if the `addSims` method has never been run.
         '''
         return tuple(self._weightedSims)
 
     @property
     def ess(self):
         '''`float`: The effective sample size, approximated with the
-        sample variance. Denoted by $K_e''$ in Section 7.2 of the Paper.
+        sample variance. Denoted by $K_e''$ in Section 4.2 of the Paper.
         '''
         numSims = len(self._weightedSims)
         if numSims == 0:
@@ -536,7 +535,7 @@ class IDPModel:
         and standard deviation $h$, where $h$ is the "bandwidth" of the
         estimate.
 
-        This method implements either (8.24) or (8.10) in the Paper,
+        This method implements either (5.12) or (5.10) in the Paper,
         depending on whether `newAgent` is `True` or `False`,
         respectively.
 
@@ -739,7 +738,7 @@ class WeightedSim:
             #
             # The m-th iteration of the `for` loop multiplies the
             # previous value of `totalWeight` by the (m + 1)-th factor
-            # in the definition of $V$ in Section 9 of the Paper.
+            # in the definition of $V$ in Section 6.1 of the Paper.
             self._logWeight += (
                 idpModel.logScale +
                 np.log(m + 1) -
@@ -758,8 +757,8 @@ class WeightedSim:
     @property
     def rowWeights(self):
         '''`tuple`(`tuple`(`float`)): The triangular array of row
-        weights for the weighted simulation. Denoted by $t$ in Section 9
-        of the Paper.
+        weights for the weighted simulation. Denoted by $t$ in Section
+        6.1 of the Paper.
         '''
         return tuple(tuple(row) for row in self._rowWeights)
 
@@ -768,13 +767,13 @@ class WeightedSim:
         r'''`tuple`(`tuple`(`float`)): A tuple of simulated row
         distributions. If `row` is $m - 1$ and `state` is $\ell$, then
         `rowDistSims`[`row`][`state`] is denoted by $\theta_{m\ell}^*
-        = u_m^*(\\{\ell\\})$ in Section 9 of the Paper.
+        = u_m^*(\\{\ell\\})$ in Section 6.1 of the Paper.
         '''
         return tuple(self._rowDistSims)
 
     @property
     def totalWeight(self):
         '''`float`: The total weight of the simulation. Denoted by $V$
-        in Section 9 of the Paper.
+        in Section 6.1 of the Paper.
         '''
         return np.exp(self._logWeight)
