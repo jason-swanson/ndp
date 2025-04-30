@@ -15,11 +15,13 @@ things:
 * The behavior of a new (unobserved) agent from the population.
 
 An iterated Dirichlet process is a mathematical tool that can model
-this. The mathematical details are provided in the preprint, "The
-iterated Dirichlet process and applications to Bayesian inference," by
-Evan Donald and Jason Swanson. (In this rest of this documentation, we
-refer to this preprint as the "Paper.") This package, `idp`, is a Python
-implementation of the iterated Dirichlet process (IDP).
+this. The mathematical details are provided in the preprint, "[The
+iterated Dirichlet process and applications to Bayesian
+inference](https://math.swansonsite.com/wp-content/uploads/2025/04/
+idp-paper-pt2.pdf)," by Evan Donald and Jason Swanson. (In this rest of
+this documentation, we refer to this preprint as the "Paper.") This
+package, `idp`, is a Python implementation of the iterated Dirichlet
+process (IDP).
 
 Below are four examples using the `idp` package.
 
