@@ -49,7 +49,7 @@ from idp.examples import coinexpl, tackexpl, revexpl, gameexpl
 
 __all__ = ['tools', 'lboard', 'idpModel']
 
-def idpModel(colConc, rowConc=None, baseMeas=None, rowCounts=None, data=None):
+def idpModel(colConc, rowConc, baseMeas=None, rowCounts=None, data=None):
     r'''Creates an IDP model in which the agents have $L$ possible
     actions. These actions are represented by the integers $0, \ldots,
     L - 1$.
