@@ -1,8 +1,7 @@
 r'''Imagine a box of 320 thumbtacks. We flick each thumbtack 9 times. If
 it lands point up, we call it a success. Point down is a failure.
 Because of the imperfections, each thumbtack has its own probability of
-success. The number of successes in 9 flicks for all 320 thumbtacks.
-They are:
+success. The number of successes in 9 flicks for all 320 thumbtacks are:
 
 >   7, 4, 6, 6, 6, 6, 8, 6, 5, 8, 6, 3, 3, 7, 8, 4, 5, 5, 7, 8, 5, 7, 6,
     5, 3, 2, 7, 7, 9, 6, 4, 6, 4, 7, 3, 7, 6, 6, 6, 5, 6, 6, 5, 6, 5, 6,
