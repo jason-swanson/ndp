@@ -1,4 +1,4 @@
-r'''A package for working with the iterated Dirichlet process.
+r'''A package for working with the nested Dirichlet process.
 
 # Description
 
@@ -14,15 +14,16 @@ things:
 * The future behavior of the agents we have observed.
 * The behavior of a new (unobserved) agent from the population.
 
-An iterated Dirichlet process is a mathematical tool that can model
-this. The mathematical details are provided in the preprint, "[The
-iterated Dirichlet process and applications to Bayesian
-inference](https://arxiv.org/abs/2505.00451)," by Evan Donald and Jason
-Swanson. (In this rest of this documentation, we refer to this preprint
-as the "Paper.") This package, `idp`, is a Python implementation of the
-iterated Dirichlet process (IDP).
+A nested Dirichlet process is a mathematical tool that can model
+this. The mathematical details are provided in the preprint,
+"[Conditional distributions for the nested Dirichlet process via
+sequential imputation](https://math.swansonsite.com/wp-content/uploads/
+2025/10/ndp-paper.pdf)," by Evan Donald and Jason Swanson. (In this rest
+of this documentation, we refer to this preprint as the "Paper.") This
+package, `ndp`, is a Python implementation of the nested Dirichlet
+process (NDP).
 
-Below are four examples using the `idp` package.
+Below are four examples using the `ndp` package.
 
 # The pressed penny machine
 
@@ -50,16 +51,16 @@ from idp.examples import coinexpl, tackexpl, revexpl, gameexpl
 __all__ = ['tools', 'lboard', 'idpModel']
 
 def idpModel(colConc, rowConc, baseMeas=None, rowCounts=None, data=None):
-    r'''Creates an IDP model in which the agents have $L$ possible
+    r'''Creates an NDP model in which the agents have $L$ possible
     actions. These actions are represented by the integers $0, \ldots,
     L - 1$.
 
     **Arguments:**
 
-    * **colConc** (`float`): The column concentration of the IDP.
-    * **rowConc** (`float`): The row concentration of the IDP.
+    * **colConc** (`float`): The column concentration of the NDP.
+    * **rowConc** (`float`): The row concentration of the NDP.
     * **baseMeas** (`array_like` or `int`): An array with one row that
-      represents the base measure of the IDP. The value of `baseMeas[l]`
+      represents the base measure of the NDP. The value of `baseMeas[l]`
       is the prior probability that an agent will perform action `l`. If
       `baseMeas` is passed an integer `L`, then the uniform measure on
       $\\{{0, \ldots, L - 1\\}}$ will be used. Any list of nonnegative
@@ -76,7 +77,7 @@ def idpModel(colConc, rowConc, baseMeas=None, rowCounts=None, data=None):
 
     **Returns:**
 
-    * `idp.tools.IDPModel`: The IDP model built from the given
+    * `idp.tools.IDPModel`: The NDP model built from the given
         parameters.
 
     **Raises:**

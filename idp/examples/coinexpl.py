@@ -31,13 +31,13 @@ chance that at least one of them would produce four tails. How should we
 balance these competing explanations and arrive at some concrete
 probabilities?
 
-One way to answer this is to model the situation with an IDP. We begin
-by using the `idpModel` function to create an instance of the
-`idp.tools.IDPModel` class. We then run 10,000 simulations.
+One way to answer this is to model the situation with an NDP. We begin
+by using the `ndpModel` function to create an instance of the
+`ndp.tools.NDPModel` class. We then run 10,000 simulations.
 
 ```python
->>> from idp import idpModel
->>> model = idpModel(1, 1, 2, data=[
+>>> from ndp import ndpModel
+>>> model = ndpModel(1, 1, 2, data=[
 ...     [1, 1, 1, 1, 0],
 ...     [1, 0, 1, 1, 1],
 ...     [0, 1, 1, 0, 1],
@@ -55,7 +55,7 @@ With these simulations in place, the first question we ask is the
 following. If we were to get a new coin from this machine, how would we
 expect it to behave? The new coin would have some random probability of
 heads, $\theta$. We can get the law (or distribution) of $\theta$ with
-the `idp.tools.IDPModel.agentLaw` method.
+the `ndp.tools.NDPModel.agentLaw` method.
 
 ```python
 >>> law = model.agentLaw()
@@ -93,7 +93,7 @@ density as follows:
 
 The approximate density is computed by smoothing out the discrete point
 masses. The degree of smoothing is determined by a parameter called the
-"bandwidth". (See `idp.tools.IDPModel.law` for details.) This bandwidth
+"bandwidth". (See `ndp.tools.NDPModel.law` for details.) This bandwidth
 is computed automatically. We can view the computed bandwidth, and we
 can also set it manually.
 

@@ -32,7 +32,7 @@ simulations.
 >>> with open('tacks.json', 'r') as f:
 ...    data = json.load(f)
 ...    rowCounts = [[9 - successes, successes] for successes in data]
->>> model = idpModel(1, 2, 2, rowCounts)
+>>> model = ndpModel(1, 2, 2, rowCounts)
 >>> model.addSims(10000) # took ~4m on a Macbook
 >>> model.ess
 243.581441084223
@@ -68,7 +68,7 @@ For example, we do not know the bandwidth used to produce Liu's graphs.
 We now try $c = 10$.
 
 ```python
->>> model = idpModel(10, 2, 2, rowCounts)
+>>> model = ndpModel(10, 2, 2, rowCounts)
 >>> model.addSims(10000)
 >>> model.ess
 387.47462091947494

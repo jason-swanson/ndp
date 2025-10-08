@@ -1,4 +1,4 @@
-'''The `IDPModel` class and related objects.
+'''The `NDPModel` class and related objects.
 
 '''
 
@@ -189,7 +189,7 @@ class Measure:
         '''`float`: If `pdf` is an approximate density created with the
         `gaussian_kde` function from the `scipy.stats` module, then this
         is the bandwidth that was used to create it. Is 0 otherwise. See
-        `IDPModel.law` for more details.
+        `NDPModel.law` for more details.
         '''
         try:
             return self.pdf.factor
@@ -227,9 +227,9 @@ class Measure:
         )
 
 class IDPModel:
-    r'''An IDP model on the state space $S = \\{0, ..., L - 1\\}$.
+    r'''An NDP model on the state space $S = \\{0, ..., L - 1\\}$.
 
-    The IDP model consists of both an IDP and some observed data. See
+    The NDP model consists of both an NDP and some observed data. See
     Section 6.1 of the Paper for details.
 
     '''
@@ -660,7 +660,7 @@ class IDPModel:
         return self.law(func, True, bandwidth)
 
 class WeightedSim:
-    r'''A weighted simulation for an `IDPModel` instance.
+    r'''A weighted simulation for an `NDPModel` instance.
 
     In the Paper, a weighted simulation is determined by the pair $(t,
     \boldsymbol{\theta}_M^*)$ and has total weight $V$.
@@ -668,13 +668,13 @@ class WeightedSim:
     '''
 
     def __init__(self, idpModel):
-        r'''Constructs a weighted simulation for the given IDP model by
+        r'''Constructs a weighted simulation for the given NDP model by
         computing the `rowWeights`, `rowDistSims`, and `totalWeight`
         properties.
 
         **Arguments:**
 
-        * **idpModel** (`IDPModel`): The IDP model for which the
+        * **ndpModel** (`NDPModel`): The NDP model for which the
             weighted simulation is being created.
 
         **Raises:**
@@ -682,14 +682,14 @@ class WeightedSim:
         * **ValueError**: If the computed value for the `totalWeight`
             property is so small or so large that its square evaluates
             to `0.0` or `np.inf`. (The square is needed in the
-            `IDPModel.ess` property).
+            `NDPModel.ess` property).
 
         '''
         self._rowWeights = []
         self._rowDistSims = []
         self._logWeight = 0 # the natural logarithm of the total weight
 
-        # If $L$ is the number of states in the IDP, then the case
+        # If $L$ is the number of states in the NDP, then the case
         # $L = 2$ is separated from the case $2 < L < \infty$ to speed
         # up code execution.
         baseMeas = np.array(idpModel.baseMeas)

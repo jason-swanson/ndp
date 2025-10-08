@@ -1,5 +1,5 @@
 r'''[Liu (1996)](https://doi.org/10.1214/aos/1032526949) only covers
-agents with two possible actions, such as coins and thumbtacks. The IDP,
+agents with two possible actions, such as coins and thumbtacks. The NDP,
 though, can handle agents whose range of possible actions is arbitrary.
 
 Imagine, then, that we discover a seller on Amazon that has 50 products.
@@ -30,7 +30,7 @@ format of the file looks like this:
 | 0      | 0       | 1       | 1       | 0       | 2         | 3.5     |
 
 After downloading the file to the current working directory, we import
-the data and create the IDP model.
+the data and create the NDP model.
 
 ```python
 >>> import csv
@@ -39,7 +39,7 @@ the data and create the IDP model.
 ...     rowCounts = [
 ...         [int(val) for val in row[:5]] for row in sheet[1:]
 ...     ]
->>> model = idpModel(1, 5, 5, rowCounts)
+>>> model = ndpModel(1, 5, 5, rowCounts)
 ```
 
 In this example, unlike the previous ones, when we try to create a
@@ -48,11 +48,11 @@ weighted simulation, we get an error.
 ```python
 >>> model.addSims(1)
 Traceback (most recent call last):
-  File "idp.py", line 395, in addSims
+  File "ndp.py", line 395, in addSims
     self._weightedSims += [WeightedSim(self) for _ in range(num)]
-  File "idp.py", line 585, in __init__
+  File "ndp.py", line 585, in __init__
     self.updateRowCounts()
-  File "idp.py", line 694, in updateRowCounts
+  File "ndp.py", line 694, in updateRowCounts
     raise ValueError(
 ValueError: Simulation weight out of bounds.
 Try adjusting log scale factor by 28.773115195642152
@@ -74,7 +74,7 @@ But now we have a new problem. The effective sample size is only
 about 8. To fix this, we can adjust the column concentration.
 
 ```python
->>> model = idpModel(10, 5, 5, rowCounts)
+>>> model = ndpModel(10, 5, 5, rowCounts)
 >>> model.logScale += 28.8
 >>> model.addSims(10000)
 >>> model.ess

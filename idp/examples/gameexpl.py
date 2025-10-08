@@ -9,7 +9,7 @@ the game. The user names are Asparagus Soda, Goat Radish, Potato Log,
 Pumpkins, Running Stardust, Sweet Rolls, The Matrix, The Pianist Spider,
 The Thing, and Vertigo Gal. We will consider two different scenarios for
 this example. The data for these examples was generated using the
-`idp.lboard` submodule.
+`ndp.lboard` submodule.
 
 ## Players with common scores
 
@@ -65,7 +65,7 @@ leaderboard, ranked by their high score.
 We are interested in ranking the players, not by their high score, but
 by their skill at the game. To be precise, we imagine that each player
 plays the game indefinitely and take their skill level to be measured by
-their long-term average score. We will use an IDP model to estimate this
+their long-term average score. We will use an NDP model to estimate this
 long-term average.
 
 Our first task is to choose a base measure for our model. The base
@@ -73,7 +73,7 @@ measure represents our prior distribution on the score of a
 player. Because it a video game, a uniform base measure would not make
 sense. But because it is only a hypothetical video game, there is no
 particular base measure that would be most appropriate. Somewhat
-arbitrarily, then, we will use the `idp.tools.gamer` distribution as our
+arbitrarily, then, we will use the `ndp.tools.gamer` distribution as our
 base measure.
 
 The gamer distribution has shape parameters $r$ and $a$, and a scale
@@ -86,23 +86,23 @@ of $a = 3$ is arbitrary and meant to reflect a game in which the player
 has three "lives."
 
 Finally, since the gamer distribution is continuous, we must discretize
-it so it can be used with the IDP model. We will use a discrete
+it so it can be used with the NDP model. We will use a discrete
 approximation that is supported on the integers between 0 and 499.
 
 ```python
->>> from idp.tools import gamer
+>>> from ndp.tools import gamer
 >>> g = gamer(7/3, 3, scale=28)
 >>> baseMeas = [g.cdf(n + 0.5) - g.cdf(n - 0.5) for n in range(499)]
 >>> baseMeas.append(g.sf(499.5))
 ```
 
-Having built the base measure, we now build our IDP model, generate
+Having built the base measure, we now build our NDP model, generate
 simulations, and check the effective sample size. As in the Amazon
 reviews example, we need to adjust the model's log scale factor in order
 to build the model without error.
 
 ```python
->>> model = idpModel(1, 1, baseMeas, data=data)
+>>> model = ndpModel(1, 1, baseMeas, data=data)
 >>> model.logScale += 42
 >>> model.addSims(40000) # took ~3m
 >>> model.ess
@@ -119,7 +119,7 @@ the long-term average score of player `m`.
 ```
 
 Using `laws`, we can view the expected long-term average score of each
-player, according the IDP model.
+player, according the NDP model.
 
 ```python
 >>> for m in range(10):
@@ -140,7 +140,7 @@ If we round these expected values to the nearest integer and add them to
 our leaderboard table, we can better visualize their relationship to the
 data.
 
-| rank | name               | hi score | avg score | IDP avg | # games |
+| rank | name               | hi score | avg score | NDP avg | # games |
 |:----:|--------------------|:--------:|:---------:|:-------:|:-------:|
 |   1  | Running Stardust   |    151   |     90    |    80   |    7    |
 |   2  | Sweet Rolls        |    130   |     66    |    55   |    6    |
@@ -156,7 +156,7 @@ data.
 Looking at this table, we can see at least two players whose numbers
 seem unusual. The first is Goat Radish. They played only one game and
 scored a 38, which is a relatively low score compared to the rest of the
-group. And yet the IDP model has given them an expected long-term
+group. And yet the NDP model has given them an expected long-term
 average score of 71. Not only is this counterintuitive, it's also
 inconsistent with how the model treated The Pianist Spider.
 
@@ -170,7 +170,7 @@ know, for instance, that there is very little difference between a score
 of 38 and 39. Had Goat Radish scored a 39 instead, our predictions
 should not change much. But we only know this because we are viewing the
 positive real numbers as more than just a set. We are viewing them as a
-totally ordered set with the Euclidean metric. The IDP model is not
+totally ordered set with the Euclidean metric. The NDP model is not
 designed to utilize these properties of the state space. From its
 perspective, the number "38" is just a label. It's nothing more than the
 name of a particular element of the state space.
@@ -187,7 +187,7 @@ The Matrix's 15 to a 14, and then rerunning the model.
 ```python
 >>> data[8][0] = 39
 >>> data[7][1] = 14
->>> model = idpModel(1, 1, baseMeas, data=data)
+>>> model = ndpModel(1, 1, baseMeas, data=data)
 >>> model.logScale += 42
 >>> model.addSims(40000)
 >>> model.ess
@@ -230,7 +230,7 @@ The Pianist Spider: 37.37972848216658
 
 Updating our table, we have the following.
 
-| rank | name               | hi score | avg score | IDP avg | # games |
+| rank | name               | hi score | avg score | NDP avg | # games |
 |:----:|--------------------|:--------:|:---------:|:-------:|:-------:|
 |   1  | Running Stardust   |    151   |     90    |    84   |    7    |
 |   2  | Sweet Rolls        |    130   |     66    |    62   |    6    |
@@ -313,12 +313,12 @@ the higher score wins, who should we bet on?
 
 ### Asparagus Soda vs. Potato Log
 
-To answer these questions, we begin by creating an IDP model. We then
+To answer these questions, we begin by creating an NDP model. We then
 use the model to rank the players by their expected long-term average
 score.
 
 ```python
->>> model = idpModel(1, 1, baseMeas, data=data)
+>>> model = ndpModel(1, 1, baseMeas, data=data)
 >>> model.logScale += 42
 >>> model.addSims(40000)
 >>> model.ess
@@ -345,7 +345,7 @@ The Pianist Spider: 56.75360824901325
 Rounding these outputs to the nearest integer and adding them to our
 leaderboard, we have the following.
 
-| rank | name               | hi score | avg score | IDP avg | # games |
+| rank | name               | hi score | avg score | NDP avg | # games |
 |:----:|--------------------|:--------:|:---------:|:-------:|:-------:|
 |   1  | Vertigo Gal        |    475   |    207    |   198   |    25   |
 |   2  | Pumpkins           |    117   |     79    |    72   |    4    |
@@ -358,7 +358,7 @@ leaderboard, we have the following.
 |   9  | Goat Radish        |    51    |     33    |    34   |    4    |
 |  10  | The Thing          |    40    |     24    |    26   |    10   |
 
-The IDP model gives Asparagus Soda a much higher expected long-term
+The NDP model gives Asparagus Soda a much higher expected long-term
 average score than Potato Log. The former is 67 and the latter is 31.
 This confirms our intuition that Asparagus Soda is the better player.
 But because Asparagus Soda played only one game, the model should have a
@@ -463,7 +463,7 @@ density of $C_{{81}}$.
 
 We now turn our attention to comparing Asparagus Soda, who played only
 once, to Pumpkins, who played four times. Their expected long-term
-average scores, according to the the IDP model, are 67 and 72,
+average scores, according to the the NDP model, are 67 and 72,
 respectively. Since Pumpkins is Player 6, we can view the model's
 uncertainty around the value 72 by looking at the density of $\Theta_6$.
 

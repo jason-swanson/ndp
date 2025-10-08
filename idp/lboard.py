@@ -3,7 +3,7 @@ r'''The `Leaderboard` class and related objects.
 # Description
 
 This module is used to create csv files of data for the video game
-leaderboards example in the package, `idp`. In the following
+leaderboards example in the package, `ndp`. In the following
 documentation, we illustrate this by creating five different csv files.
 Each file will contain the data for 10 players.
 
@@ -11,7 +11,7 @@ We first construct a `Leaderboard` instance with 10 players. Each player
 on the leaderboard is a `Player` object that contains data about the
 player as well as a list of historical scores for that player. The
 number of scores on the list is random and the marginal distribution of
-each score is the `gamer` distribution from the `idp.tools` module. To
+each score is the `gamer` distribution from the `ndp.tools` module. To
 construct such a player, we must decide on the mean number of scores on
 the list, and also the shape and scale parameters of the `gamer`
 distribution.
@@ -26,7 +26,7 @@ If we fit the scores in `TETRIS_SCORES` to a power law distribution, we
 get the following:
 
 ```python
->>> from idp.lboard import *
+>>> from ndp.lboard import *
 >>> from scipy.stats import pareto
 >>> pareto.fit(TETRIS_SCORES, floc=0)[0]
 2.361453182701752
@@ -73,31 +73,31 @@ leaderboard.
 
 Although this would be enough to get us started, we want to add one more
 column to this spreadsheet. We want to add a column that gives the
-player's long-term average score, according to an IDP model. We will do
+player's long-term average score, according to an NDP model. We will do
 this by updating the `estAvg` property of each `Player` object in the
 leaderboard.
 
-We first build the base measure of our IDP model.
+We first build the base measure of our NDP model.
 
 ```python
->>> from idp.tools import gamer
+>>> from ndp.tools import gamer
 >>> g = gamer(7/3, 3, scale=28)
 >>> baseMeas = [g.cdf(n + 0.5) - g.cdf(n - 0.5) for n in range(499)]
 >>> baseMeas.append(g.sf(499.5))
 ```
 
-We then extract the data from our leaderboard for the IDP model.
+We then extract the data from our leaderboard for the NDP model.
 
 ```python
 >>> players = sorted(lboard.players, key=lboard.playCountRank)
 >>> data = [player.scores for player in players]
 ```
 
-Finally, we build the IDP model and add 40,000 weighted simulations.
+Finally, we build the NDP model and add 40,000 weighted simulations.
 
 ```python
->>> from idp import idpModel
->>> model = idpModel(1, 1, baseMeas, data=data)
+>>> from ndp import ndpModel
+>>> model = ndpModel(1, 1, baseMeas, data=data)
 >>> model.scale += 42
 >>> model.addSims(40000) # took ~3m on a Macbook
 >>> model.ess
@@ -130,7 +130,7 @@ CSV files in the same way.
 >>>     lboard = makeBoard((7/3, 3), 28, 2.4 * sqrt(10))
 >>>     players = sorted(lboard.players, key=lboard.playCountRank)
 >>>     data = [player.scores for player in players]
->>>     model = idpModel(1, 1, baseMeas, data=data)
+>>>     model = ndpModel(1, 1, baseMeas, data=data)
 >>>     model.scale += 42
 >>>     model.addSims(40000)
 >>>     print(model.ess)
@@ -234,7 +234,7 @@ def meanRunTime(mean):
 
 def makeBoard(args, scale, mean):
     r'''Makes a leaderboard of 10 players for analyzing with the
-    iterated Dirichlet process. The names of the players are taken from
+    nested Dirichlet process. The names of the players are taken from
     the constant, `USER_NAMES`. The `args`, `scale`, and `mean`
     arguments are passed directly to the `Player` constructor for each
     player on the leaderboard.
@@ -274,7 +274,7 @@ def makeCSV(lboard, filename='gameexpl'):
     The following example code will generate 5 scenarios worth of data:
 
     ```python
-    >>> from idp.gamedata import makeCSV
+    >>> from ndp.gamedata import makeCSV
     >>> for i in range(1, 6):
     ...     makeCSV(f'gameexpl{i}')
     ```
@@ -358,7 +358,7 @@ class Player:
         '''`float`: An estimate of the player's theoretical long-term
         average score. Defaults to the mean of their actual scores, but
         can be replaced by something more sophisticated, such as an
-        estimate created with the `idp.tools.IDPModel` class.
+        estimate created with the `ndp.tools.NDPModel` class.
         '''
 
     @property
