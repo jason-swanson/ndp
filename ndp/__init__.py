@@ -45,8 +45,8 @@ Below are four examples using the `ndp` package.
 
 from collections import Counter
 import numpy as np
-from idp import tools, lboard
-from idp.examples import coinexpl, tackexpl, revexpl, gameexpl
+from ndp import tools, lboard
+from ndp.examples import coinexpl, tackexpl, revexpl, gameexpl
 
 __all__ = ['tools', 'lboard', 'ndpModel']
 
