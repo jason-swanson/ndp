@@ -16,15 +16,15 @@ print(meanRunTime(2.4 * sqrt(10))) # 7.895576353625911
 
 lboard = makeBoard((7/3, 3), 28, 2.4 * sqrt(10))
 
-from idp.tools import gamer
+from ndp.tools import gamer
 g = gamer(7/3, 3, scale=28)
 baseMeas = [g.cdf(n + 0.5) - g.cdf(n - 0.5) for n in range(499)]
 baseMeas.append(g.sf(499.5))
 
 players = sorted(lboard.players, key=lboard.playCountRank)
 data = [player.scores for player in players]
-from idp import idpModel
-model = idpModel(1, 1, baseMeas, data=data)
+from ndp import ndpModel
+model = ndpModel(1, 1, baseMeas, data=data)
 model.scale += 42
 model.addSims(40000)
 # %time
@@ -48,7 +48,7 @@ for i in range(2, 6):
     lboard = makeBoard((7/3, 3), 28, 2.4 * sqrt(10))
     players = sorted(lboard.players, key=lboard.playCountRank)
     data = [player.scores for player in players]
-    model = idpModel(1, 1, baseMeas, data=data)
+    model = ndpModel(1, 1, baseMeas, data=data)
     model.scale += 42
     model.addSims(40000)
     print(model.ess)

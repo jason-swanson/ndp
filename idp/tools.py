@@ -9,7 +9,7 @@ from scipy.stats import pareto, gamma, beta, dirichlet
 from scipy.stats import rv_continuous, gaussian_kde, ecdf
 from statsmodels.distributions.empirical_distribution import ECDFDiscrete
 
-__all__ = ['logBeta', 'gamer', 'Measure', 'IDPModel', 'WeightedSim']
+__all__ = ['logBeta', 'gamer', 'Measure', 'NDPModel', 'WeightedSim']
 
 def logBeta(alpha):
     '''Returns the logarithm of the multivariate beta function.
@@ -226,7 +226,7 @@ class Measure:
             self._totalMass + other.totalMass
         )
 
-class IDPModel:
+class NDPModel:
     r'''An NDP model on the state space $S = \\{0, ..., L - 1\\}$.
 
     The NDP model consists of both an NDP and some observed data. See
@@ -240,15 +240,15 @@ class IDPModel:
         of the same shape as the corresponding properties.
 
         '''
-        self._idp = {
+        self._ndp = {
             'colConc': colConc,
             'rowConc': rowConc,
             'baseMeas': baseMeas
         }
         self._rowCounts = rowCounts
 
-        rowConc = self._idp['rowConc']
-        baseMeas = self._idp['baseMeas']
+        rowConc = self._ndp['rowConc']
+        baseMeas = self._ndp['baseMeas']
         logDenom = logBeta(rowConc * baseMeas)
         self._likelihoods = [
             np.exp(logBeta(rowConc * baseMeas + row) - logDenom)
@@ -272,14 +272,14 @@ class IDPModel:
         r'''`float`: The column concentration parameter. Should be
         positive. Denoted by $\kappa$ in Section 6.1 of the Paper.
         '''
-        return self._idp['colConc']
+        return self._ndp['colConc']
 
     @property
     def rowConc(self):
         r'''`float`: The row concentration parameter. Should be
         positive. Denoted by $\varepsilon$ in Section 6.1 of the Paper.
         '''
-        return self._idp['rowConc']
+        return self._ndp['rowConc']
 
     @property
     def baseMeas(self):
@@ -288,7 +288,7 @@ class IDPModel:
         $\boldsymbol{p} = (p_0, \ldots, p_{L - 1})$ in Section 6.1 of
         the Paper, where $p_\ell = \varrho(\\{\ell\\})$.
         '''
-        return tuple(self._idp['baseMeas'])
+        return tuple(self._ndp['baseMeas'])
 
     @property
     def rowCounts(self):
@@ -497,12 +497,12 @@ class IDPModel:
         '''
         if not callable(mapping):
             prior = beta(
-                self._idp['rowConc'] * self._idp['baseMeas'][mapping],
-                self._idp['rowConc'] * (1 - self._idp['baseMeas'][mapping])
+                self._ndp['rowConc'] * self._ndp['baseMeas'][mapping],
+                self._ndp['rowConc'] * (1 - self._ndp['baseMeas'][mapping])
             )
             return Measure(prior.cdf, prior.pdf, prior.mean())
         rawSamples = dirichlet.rvs(
-            self._idp['rowConc'] * self._idp['baseMeas'],
+            self._ndp['rowConc'] * self._ndp['baseMeas'],
             numSamples
         )
         samples = [mapping(sample) for sample in rawSamples]
@@ -614,7 +614,7 @@ class IDPModel:
         # return a mixture as in (8.24).
         if not newAgent:
             return sampleLaw
-        colConc = self._idp['colConc']
+        colConc = self._ndp['colConc']
         return (
             (colConc / (colConc + numRows)) * self.prior(mapping) +
             (numRows / (colConc + numRows)) * sampleLaw
@@ -667,7 +667,7 @@ class WeightedSim:
 
     '''
 
-    def __init__(self, idpModel):
+    def __init__(self, ndpModel):
         r'''Constructs a weighted simulation for the given NDP model by
         computing the `rowWeights`, `rowDistSims`, and `totalWeight`
         properties.
@@ -692,11 +692,11 @@ class WeightedSim:
         # If $L$ is the number of states in the NDP, then the case
         # $L = 2$ is separated from the case $2 < L < \infty$ to speed
         # up code execution.
-        baseMeas = np.array(idpModel.baseMeas)
+        baseMeas = np.array(ndpModel.baseMeas)
         numStates = len(baseMeas)
 
         # expand properties if row counts have been added
-        for m, counts in enumerate(idpModel.rowCounts):
+        for m, counts in enumerate(ndpModel.rowCounts):
 
             # build `rowWeights[m]`
             self._rowWeights.append([])
@@ -712,7 +712,7 @@ class WeightedSim:
                         weight *= self._rowDistSims[i][state] ** counts[state]
                     self._rowWeights[m].append(weight)
             self._rowWeights[m].append(
-                idpModel.colConc * idpModel.likelihoods[m]
+                ndpModel.colConc * ndpModel.likelihoods[m]
             )
 
             # build `rowDistSims[m]`
@@ -722,15 +722,15 @@ class WeightedSim:
             else:
                 if numStates == 2:
                     rowDistSim = beta.rvs(
-                        idpModel.rowConc * baseMeas[1] + counts[1],
-                        idpModel.rowConc * baseMeas[0] + counts[0]
+                        ndpModel.rowConc * baseMeas[1] + counts[1],
+                        ndpModel.rowConc * baseMeas[0] + counts[0]
                     )
                     self._rowDistSims.append([1 - rowDistSim, rowDistSim])
                 else:
                     self._rowDistSims.append(
                         # vector sum fails for lists, works for ndarray
                         dirichlet.rvs(
-                            idpModel.rowConc * baseMeas + counts
+                            ndpModel.rowConc * baseMeas + counts
                         )[0]
                     )
 
@@ -740,15 +740,15 @@ class WeightedSim:
             # previous value of `totalWeight` by the (m + 1)-th factor
             # in the definition of $V$ in Section 6.1 of the Paper.
             self._logWeight += (
-                idpModel.logScale +
+                ndpModel.logScale +
                 np.log(m + 1) -
-                np.log(idpModel.colConc + m) +
+                np.log(ndpModel.colConc + m) +
                 np.log(sum(self._rowWeights[m]))
             )
 
         # check that total weight is not out of bounds
         if np.exp(2 * self._logWeight) in (0, np.inf):
-            adj = -self._logWeight/len(idpModel.rowCounts)
+            adj = -self._logWeight/len(ndpModel.rowCounts)
             raise ValueError(
                 'Simulation weight out of bounds.\n' +
                 f'Try adjusting log scale factor by {adj}'

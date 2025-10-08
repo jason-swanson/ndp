@@ -160,8 +160,8 @@ same as if we did 6,067 direct simulations.
 EXTENSIONS = ['png', 'jpg', 'pdf', 'svg', 'eps', 'ps']
 
 if __name__ == '__main__':
-    from idp import idpModel
-    model = idpModel(1, 1, 2, data=[
+    from ndp import ndpModel
+    model = ndpModel(1, 1, 2, data=[
         [1, 1, 1, 1, 0],
         [1, 0, 1, 1, 1],
         [0, 1, 1, 0, 1],

@@ -179,7 +179,7 @@ about 3.8.
 # pylint: disable=unused-import
 
 if __name__ == '__main__':
-    from idp import idpModel
+    from ndp import ndpModel
     import numpy as np
     import matplotlib.pyplot as plt
     import json
@@ -192,7 +192,7 @@ if __name__ == '__main__':
     with open('revexpl.csv') as f:
         sheet = list(csv.reader(f))
         rowCounts = [[int(val) for val in row[:5]] for row in sheet[1:]]
-    model = idpModel(1, 5, 5, rowCounts)
+    model = ndpModel(1, 5, 5, rowCounts)
     # model.addSims(1)
     # Traceback (most recent call last):
     #   File "tools.py", line 243, in addSims
@@ -241,7 +241,7 @@ if __name__ == '__main__':
     # mean: 14.68267062279358
     # sample SD: 13.4323342552673
 
-    model = idpModel(10, 5, 5, rowCounts)
+    model = ndpModel(10, 5, 5, rowCounts)
     model.logScale += 28.8
     model.addSims(10000)
     # %time

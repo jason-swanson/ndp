@@ -48,9 +48,9 @@ import numpy as np
 from idp import tools, lboard
 from idp.examples import coinexpl, tackexpl, revexpl, gameexpl
 
-__all__ = ['tools', 'lboard', 'idpModel']
+__all__ = ['tools', 'lboard', 'ndpModel']
 
-def idpModel(colConc, rowConc, baseMeas=None, rowCounts=None, data=None):
+def ndpModel(colConc, rowConc, baseMeas=None, rowCounts=None, data=None):
     r'''Creates an NDP model in which the agents have $L$ possible
     actions. These actions are represented by the integers $0, \ldots,
     L - 1$.
@@ -77,7 +77,7 @@ def idpModel(colConc, rowConc, baseMeas=None, rowCounts=None, data=None):
 
     **Returns:**
 
-    * `idp.tools.IDPModel`: The NDP model built from the given
+    * `ndp.tools.NDPModel`: The NDP model built from the given
         parameters.
 
     **Raises:**
@@ -103,7 +103,7 @@ def idpModel(colConc, rowConc, baseMeas=None, rowCounts=None, data=None):
         ]
     rowCounts = np.array(rowCounts)
 
-    return tools.IDPModel(colConc, rowConc, baseMeas, rowCounts)
+    return tools.NDPModel(colConc, rowConc, baseMeas, rowCounts)
 
 __doc__ = __doc__.format(
     coinexpl.__doc__,

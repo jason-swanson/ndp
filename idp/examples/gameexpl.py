@@ -521,7 +521,7 @@ Asparagus Soda vs. Potato Log.
 # pylint: disable=ungrouped-imports
 
 if __name__ == '__main__':
-    from idp import idpModel
+    from ndp import ndpModel
     import numpy as np
     import matplotlib.pyplot as plt
     import json
@@ -537,12 +537,12 @@ if __name__ == '__main__':
             for row in sheet[1:]
         ]
 
-    from idp.tools import gamer
+    from ndp.tools import gamer
     g = gamer(7/3, 3, scale=28)
     baseMeas = [g.cdf(n + 0.5) - g.cdf(n - 0.5) for n in range(499)]
     baseMeas.append(g.sf(499.5))
 
-    model = idpModel(1, 1, baseMeas, data=data)
+    model = ndpModel(1, 1, baseMeas, data=data)
     model.logScale += 42
     model.addSims(40000)
     # %time
@@ -572,7 +572,7 @@ if __name__ == '__main__':
 
     data[8][0] = 39
     data[7][1] = 14
-    model = idpModel(1, 1, baseMeas, data=data)
+    model = ndpModel(1, 1, baseMeas, data=data)
     model.logScale += 42
     model.addSims(40000)
     # %time
@@ -606,7 +606,7 @@ if __name__ == '__main__':
             for row in sheet[1:]
         ]
 
-    model = idpModel(1, 1, baseMeas, data=data)
+    model = ndpModel(1, 1, baseMeas, data=data)
     model.logScale += 42
     model.addSims(40000)
     # %time

@@ -88,7 +88,7 @@ effective sample size of 300 in this case.
 # pylint: disable=wrong-import-order
 
 if __name__ == '__main__':
-    from idp import idpModel
+    from ndp import ndpModel
     import numpy as np
     import matplotlib.pyplot as plt
     t = np.linspace(0, 1, 200)
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     with open('tackexpl.json', 'r') as f: 
         data = json.load(f)
         rowCounts = [[9 - successes, successes] for successes in data]
-    model = idpModel(1, 2, 2, rowCounts)
+    model = ndpModel(1, 2, 2, rowCounts)
     model.addSims(10000)
     # %time
     # CPU times: user 3min 32s, sys: 18 s, total: 3min 50s
@@ -123,7 +123,7 @@ if __name__ == '__main__':
 
     # restart IPython before running the rest
 
-    model = idpModel(10, 2, 2, rowCounts)
+    model = ndpModel(10, 2, 2, rowCounts)
     model.addSims(10000)
     # %time
     # CPU times: user 3min 39s, sys: 40.2 s, total: 4min 19s
