@@ -17,11 +17,10 @@ things:
 A nested Dirichlet process is a mathematical tool that can model
 this. The mathematical details are provided in the preprint,
 "[Conditional distributions for the nested Dirichlet process via
-sequential imputation](https://math.swansonsite.com/wp-content/uploads/
-2025/10/ndp-paper.pdf)," by Evan Donald and Jason Swanson. (In this rest
-of this documentation, we refer to this preprint as the "Paper.") This
-package, `ndp`, is a Python implementation of the nested Dirichlet
-process (NDP).
+sequential imputation](https://arxiv.org/abs/2505.00451)," by Evan
+Donald and Jason Swanson. (In this rest of this documentation, we refer
+to this preprint as the "Paper.") This package, `ndp`, is a Python
+implementation of the nested Dirichlet process (NDP).
 
 Below are four examples using the `ndp` package.
 
